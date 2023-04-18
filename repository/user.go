@@ -3,7 +3,7 @@ package repository
 import (
 	"api/configs"
 	"api/handler/api/v1/requests"
-	"api/models/gorms"
+	"api/models"
 	"time"
 
 	"github.com/getsentry/sentry-go"
@@ -20,11 +20,11 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (receiver UserRepository) Create(req requests.UserCreateRequest) (resp gorms.User, err error) {
+func (receiver UserRepository) Create(req requests.UserCreateRequest) (resp models.User, err error) {
 	defaultRole := configs.UserRoleAdmin
 	defaultStatus := configs.UserStatusActive
 	defaultApprovedStatus := configs.UserApprovedStatus
-	userGorm := gorms.User{
+	userGorm := models.User{
 		Username:       req.Username,
 		Password:       req.Password,
 		Email:          req.Email,
@@ -48,8 +48,8 @@ func (receiver UserRepository) Create(req requests.UserCreateRequest) (resp gorm
 	return
 }
 
-func (receiver UserRepository) GetByUsername(username string) (resp gorms.User, err error) {
-	tx := receiver.DB.Where(&gorms.User{Username: username}).First(&resp)
+func (receiver UserRepository) GetByUsername(username string) (resp models.User, err error) {
+	tx := receiver.DB.Where(&models.User{Username: username}).First(&resp)
 
 	err = tx.Error
 	if err != nil {

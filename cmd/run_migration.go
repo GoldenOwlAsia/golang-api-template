@@ -3,7 +3,7 @@ package main
 import (
 	"api/configs"
 	"api/migrations"
-	gormModels "api/models/gorms"
+	"api/models"
 	"api/pkgs/gorm"
 	"api/utils"
 	"flag"
@@ -37,7 +37,7 @@ func seedUser() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	users := []gormModels.User{
+	users := []models.User{
 		{Username: "admin", Email: "admin@example.com", Password: hashPassword, Role: "Admin"},
 	}
 

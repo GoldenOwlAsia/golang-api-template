@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"api/models/gorms"
+	"api/models"
 	"errors"
 	"fmt"
 	"time"
@@ -16,7 +16,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user gorms.User, expirationTime time.Time, secretJWTKey string) (tokenString string, err error) {
+func GenerateToken(user models.User, expirationTime time.Time, secretJWTKey string) (tokenString string, err error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	now := time.Now().UTC()
@@ -57,10 +57,10 @@ func ValidateToken(token string, signedJWTKey string) (validateResult interface{
 	return claims["sub"], nil
 }
 
-func GetCurrentUser(c *gin.Context) (user gorms.User) {
-	currentUser := c.MustGet("currentUser").(gorms.User)
+func GetCurrentUser(c *gin.Context) (user models.User) {
+	currentUser := c.MustGet("currentUser").(models.User)
 
-	user = gorms.User{
+	user = models.User{
 		Username:       currentUser.Username,
 		Password:       currentUser.Password,
 		Email:          currentUser.Email,

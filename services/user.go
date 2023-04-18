@@ -4,7 +4,7 @@ import (
 	"api/configs"
 	"api/handler/api/v1/requests"
 	"api/handler/api/v1/responses"
-	"api/models/gorms"
+	"api/models"
 	"api/pkgs/jwt"
 	"api/repository"
 	"api/utils"
@@ -26,7 +26,7 @@ func NewUserService(r repository.UserRepository) UserService {
 	}
 }
 
-func (receiver UserService) Create(req requests.UserCreateRequest) (resp gorms.User, err error) {
+func (receiver UserService) Create(req requests.UserCreateRequest) (resp models.User, err error) {
 	// valid data
 	if req.Password != req.ConfirmPassword {
 		err = errors.New("confirm password does not match password")
@@ -61,7 +61,7 @@ func (receiver UserService) Create(req requests.UserCreateRequest) (resp gorms.U
 	return
 }
 
-func (receiver UserService) GetByUsername(username string) (resp gorms.User, err error) {
+func (receiver UserService) GetByUsername(username string) (resp models.User, err error) {
 	resp, err = receiver.Repo.GetByUsername(username)
 	if err != nil {
 		err = errors.New("not found username")

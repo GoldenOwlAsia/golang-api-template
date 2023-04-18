@@ -1,4 +1,4 @@
-package gorms
+package models
 
 import (
 	"time"

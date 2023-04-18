@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"api/configs"
-	"api/models/gorms"
+	"api/models"
 	"api/pkgs/jwt"
 	"api/utils"
 	"fmt"
@@ -49,8 +49,8 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 
 		userId, _ := strconv.Atoi(fmt.Sprint(sub))
 
-		var user gorms.User
-		result := receiver.db.Where(&gorms.User{Id: uint(userId)}).First(&user)
+		var user models.User
+		result := receiver.db.Where(&models.User{Id: uint(userId)}).First(&user)
 		if result.Error != nil {
 			resp := utils.ResponseFailed{
 				Code:       0,
