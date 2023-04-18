@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Server Sent Event</title>
+    <script src="https://unpkg.com/event-source-polyfill/src/eventsource.min.js"></script>
+</head>
+
+
+<body>
+<div class="event-data"></div>
+</body>
+
+<script>
+    const token = "xxx";
+    // EventSource object of javascript listens the streaming events from our go server and prints the message.
+    var stream = new EventSourcePolyfill("http://127.0.0.1:8080/api/v1/upload/progress?company_id=1&batch_ids=221,223,228", {
+        headers: {
+            Authorization:  `Bearer ${token}` // or localStorage.getItem("myToken")
+        }
+    });
+    stream.addEventListener("message", function(e){
+        $('.event-data').append(e.data + "</br>")
+    });
+    console.log(stream.withCredentials);
+</script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+</html>
