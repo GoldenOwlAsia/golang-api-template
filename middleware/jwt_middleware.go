@@ -41,8 +41,8 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 			return
 		}
 
-		sub, errCouria := jwt.ValidateToken(token, configs.ConfApp.TokenSecret)
-		if errCouria.Error != nil {
+		sub, err := jwt.ValidateToken(token, configs.ConfApp.TokenSecret)
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, utils.GetRespError("your token is invalid", nil))
 			return
 		}

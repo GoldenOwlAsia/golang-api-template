@@ -84,8 +84,8 @@ func (receiver UserService) Login(req requests.UserLoginRequest) (resp responses
 	}
 
 	expiredTime := time.Now().Add(configs.ConfApp.TokenExpiresIn)
-	token, errorCouria := jwt.GenerateToken(userRes, expiredTime, configs.ConfApp.TokenSecret)
-	if errorCouria.Error != nil {
+	token, err := jwt.GenerateToken(userRes, expiredTime, configs.ConfApp.TokenSecret)
+	if err != nil {
 		return
 	}
 
