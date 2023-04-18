@@ -41,7 +41,7 @@ func (receiver UserHandler) Create(c *gin.Context) {
 
 	res, err := receiver.service.Create(req)
 
-	if err.Error != nil {
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.GetRespError(err.Error(), nil))
 		return
 	}
@@ -64,7 +64,7 @@ func (receiver UserHandler) GetByUsername(c *gin.Context) {
 
 	res, err := receiver.service.GetByUsername(username)
 
-	if err.Error != nil {
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.GetRespError(err.Error(), nil))
 		return
 	}
@@ -92,7 +92,7 @@ func (receiver UserHandler) Login(c *gin.Context) {
 	}
 
 	resLogin, err := receiver.service.Login(req)
-	if err.Error != nil {
+	if err != nil {
 		c.JSON(http.StatusUnauthorized, utils.GetRespError(err.Error(), nil))
 		return
 	}
