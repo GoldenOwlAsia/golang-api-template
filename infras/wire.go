@@ -2,7 +2,7 @@
 // +build wireinject
 
 //go:generate go run github.com/google/wire/cmd/wire@latest
-package main
+package infras
 
 import (
 	v1 "api/handler/api/v1"

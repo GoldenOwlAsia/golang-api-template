@@ -1,18 +1,17 @@
 package main
 
 import (
+	"api/infras"
 	"api/migrations"
 	"api/sse"
 	"fmt"
 	sentrygin "github.com/getsentry/sentry-go/gin"
-	gormlib "gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 
 	"api/configs"
-	"api/handler/api"
 	"api/middleware"
 	"api/pkgs/gorm"
 	"api/router"
@@ -65,7 +64,7 @@ func main() {
 	app.Use(middleware.HandleResponse)
 	app.Use(sentrygin.New(sentrygin.Options{Repanic: true}))
 
-	appHandler := DI(db, stream)
+	appHandler := infras.DI(db, stream)
 
 	app = router.InitRouter(app, appHandler, db, stream)
 
@@ -97,10 +96,4 @@ func main() {
 	}
 
 	log.Println("Server exiting")
-}
-
-func DI(db *gormlib.DB, event *sse.Event) api.AppHandler {
-	return api.AppHandler{
-		User: InitUserAPI(db),
-	}
 }

@@ -4,18 +4,13 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package infras
 
 import (
 	"api/handler/api/v1"
 	"api/repository"
 	"api/services"
 	"gorm.io/gorm"
-)
-
-import (
-	_ "github.com/swaggo/files"
-	_ "github.com/swaggo/gin-swagger"
 )
 
 // Injectors from wire.go:

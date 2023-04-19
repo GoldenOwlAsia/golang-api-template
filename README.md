@@ -85,7 +85,7 @@ swag init
 1. change configuration in file ```wire.go ```
 2. run the following command to automatically generate the code
 ```sh
-wire
+make di
 ```
 
 #### 🧪 testing
