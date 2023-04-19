@@ -7,7 +7,7 @@
 package infras
 
 import (
-	"api/handler/api/v1"
+	"api/api/v1"
 	"api/repository"
 	"api/services"
 	"gorm.io/gorm"

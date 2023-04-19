@@ -1,8 +1,8 @@
 package router
 
 import (
+	"api/api"
 	"api/docs"
-	"api/handler/api"
 	"api/middleware"
 	"api/sse"
 	"github.com/gin-gonic/gin"

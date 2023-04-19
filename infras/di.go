@@ -1,7 +1,7 @@
 package infras
 
 import (
-	"api/handler/api"
+	"api/api"
 	"api/sse"
 	"gorm.io/gorm"
 )

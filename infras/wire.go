@@ -5,7 +5,7 @@
 package infras
 
 import (
-	v1 "api/handler/api/v1"
+	"api/api/v1"
 	"api/repository"
 	"api/services"
 	"github.com/google/wire"

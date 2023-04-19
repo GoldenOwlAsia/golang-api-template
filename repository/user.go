@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"api/api/v1/requests"
 	"api/configs"
-	"api/handler/api/v1/requests"
 	"api/models"
 	"time"
 

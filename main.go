@@ -1,25 +1,20 @@
 package main
 
 import (
+	"api/api"
 	"api/infras"
-	"api/migrations"
-	"api/sse"
-	"fmt"
-	sentrygin "github.com/getsentry/sentry-go/gin"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
-
-	"api/configs"
 	"api/middleware"
-	"api/pkgs/gorm"
+	"api/migrations"
 	"api/router"
-	"github.com/getsentry/sentry-go"
-	"github.com/gin-gonic/gin"
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	_ "github.com/swaggo/files"
 	_ "github.com/swaggo/gin-swagger"
 )
+
+func init() {
+	api.Api = api.NewServer()
+	api.Api.InitEnv().InitDb().InitGin().InitSentry().InitSSE()
+}
 
 // @title           GoldenOwl Gin API
 // @version         1.0.0
@@ -31,69 +26,12 @@ import (
 // @BasePath		/
 // @securityDefinitions.basic  BasicAuth
 func main() {
-	var err error
-	// load .env config
-	_, err = configs.LoadConfig(".")
-	if err != nil {
-		log.Fatal("cannot load configs: ", err)
-	}
-	if err = os.Setenv("TZ", configs.ConfApp.AppTimezone); err != nil {
-		log.Fatal("cannot set TZ config: ", err)
-	}
-
-	// init sentry
-	if err = sentry.Init(sentry.ClientOptions{
-		Dsn:              configs.ConfApp.SentryDNS,
-		EnableTracing:    true,
-		Environment:      configs.ConfApp.AppMode,
-		TracesSampleRate: 1.0,
-	}); err != nil {
-		log.Printf("Sentry initialization failed: %v\n", err)
-	}
-
-	var (
-		app    = gin.Default()
-		stream = sse.NewServer()
-		db     = gorm.DbInstance.Instance()
-	)
-
-	gin.SetMode(configs.ConfApp.AppMode)
 	migrations.Migrate()
-
-	app.Use(middleware.Cors())
-	app.Use(middleware.HandleResponse)
-	app.Use(sentrygin.New(sentrygin.Options{Repanic: true}))
-
-	appHandler := infras.DI(db, stream)
-
-	app = router.InitRouter(app, appHandler, db, stream)
-
-	// -- Graceful restart or stop server --
-	server := &http.Server{
-		Addr:    fmt.Sprintf(":%s", configs.ConfApp.Port), // + configs.ConfApp.Port
-		Handler: app,
-	}
-
-	fmt.Printf("[GoldenOwl API - %s] Start to listening the incoming requests on http address: %s 🚀🚀🚀", gin.Mode(), server.Addr)
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-
-	go func() {
-		<-quit
-		log.Println("receive interrupt signal")
-		if err := server.Close(); err != nil {
-			log.Fatal("Server Close:", err)
-		}
-	}()
-
-	if err := server.ListenAndServe(); err != nil {
-		if err == http.ErrServerClosed {
-			log.Println("Server closed under request")
-		} else {
-			log.Fatal("Server closed unexpect")
-		}
-	}
-
-	log.Println("Server exiting")
+	migrations.Seed()
+	api.Api.Gin.Use(middleware.Cors())
+	api.Api.Gin.Use(middleware.HandleResponse)
+	api.Api.Gin.Use(sentrygin.New(sentrygin.Options{Repanic: true}))
+	appHandler := infras.DI(api.Api.DB, api.Api.Event)
+	api.Api.Gin = router.InitRouter(api.Api.Gin, appHandler, api.Api.DB, api.Api.Event)
+	api.Api.SpinUp()
 }

@@ -1,15 +1,14 @@
 package migrations
 
 import (
+	"api/api"
 	"api/models"
-	"api/pkgs/gorm"
 	"log"
 )
 
-func Migrate() {
+func Migrate() (err error) {
 	log.Println("migrating data...")
-	db := gorm.CreateInstanceDb()
-	db.AutoMigrate(
+	return api.Api.DB.AutoMigrate(
 		&models.User{},
 	)
 }

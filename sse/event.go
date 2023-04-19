@@ -33,7 +33,7 @@ type Event struct {
 	TotalClients map[chan EventPayload]bool
 }
 
-// Initialize event and Start procnteessing requests
+// Initialize event and SpinUp procnteessing requests
 func NewServer() (event *Event) {
 	event = &Event{
 		Message:       make(chan EventPayload),

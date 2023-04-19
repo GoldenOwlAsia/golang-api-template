@@ -1,9 +1,9 @@
 package services
 
 import (
+	"api/api/v1/requests"
+	"api/api/v1/responses"
 	"api/configs"
-	"api/handler/api/v1/requests"
-	"api/handler/api/v1/responses"
 	"api/models"
 	"api/pkgs/jwt"
 	"api/repository"

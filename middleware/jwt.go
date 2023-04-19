@@ -6,12 +6,11 @@ import (
 	"api/pkgs/jwt"
 	"api/utils"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type jwtMiddleware struct {
