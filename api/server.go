@@ -42,13 +42,7 @@ func (s *Server) InitEnv() *Server {
 }
 
 func (s *Server) InitDb() *Server {
-	username := configs.ConfApp.DatabaseUserName
-	password := configs.ConfApp.DatabasePassword
-	host := configs.ConfApp.DatabaseHost
-	port := configs.ConfApp.DatabasePort
-	databaseName := configs.ConfApp.DatabaseName
-	timeZone := configs.ConfApp.DatabaseTimezone
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=%s", host, username, password, databaseName, port, timeZone)
+	dsn := s.getDSN()
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: func() logger.Interface {
 			if configs.ConfApp.AppMode == gin.DebugMode {
@@ -59,13 +53,24 @@ func (s *Server) InitDb() *Server {
 	})
 
 	if err != nil {
-		//log.Fatal("cannot connect to database: ", err) // send detailed error to Sentry
 		log.Println("cannot connect to database: ", err)
 	}
 
 	s.DB = db
 
 	return s
+}
+
+func (s *Server) getDSN() (dsn string) {
+	username := configs.ConfApp.DatabaseUserName
+	password := configs.ConfApp.DatabasePassword
+	host := configs.ConfApp.DatabaseHost
+	port := configs.ConfApp.DatabasePort
+	databaseName := configs.ConfApp.DatabaseName
+	timeZone := configs.ConfApp.DatabaseTimezone
+	dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=%s", host, username, password, databaseName, port, timeZone)
+
+	return
 }
 
 func (s *Server) InitGin() *Server {
