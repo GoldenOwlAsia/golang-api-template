@@ -10,8 +10,8 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "joe.nghiem",
-            "email": "joe.nghiem.goldenowl@gmail.com"
+            "name": "goldenowl.asia",
+            "email": "hello@goldenowl.asia"
         },
         "license": {
             "name": "Apache 2.0",

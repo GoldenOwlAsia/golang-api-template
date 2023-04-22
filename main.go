@@ -19,8 +19,8 @@ func init() {
 // @title           GoldenOwl Gin API
 // @version         1.0.0
 // @description     This API is for GoldenOwl API application
-// @contact.name	joe.nghiem
-// @contact.email	joe.nghiem.goldenowl@gmail.com
+// @contact.name	goldenowl.asia
+// @contact.email	hello@goldenowl.asia
 // @license.name	Apache 2.0
 // @license.url		http://www.apache.org/licenses/LICENSE-2.0.html
 // @BasePath		/

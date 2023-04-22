@@ -1,14 +1,14 @@
 package middleware
 
 import (
-	"api/configs"
 	"api/models"
-	"api/pkgs/jwt"
+	"api/pkgs/jwt_auth_token"
 	"api/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -40,7 +40,7 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 			return
 		}
 
-		sub, err := jwt.ValidateToken(token, configs.ConfApp.TokenSecret)
+		sub, err := jwt_auth_token.ValidateAccessToken(token, os.Getenv("SECRET_KEY"))
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, utils.GetRespError("your token is invalid", nil))
 			return
@@ -49,14 +49,9 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 		userId, _ := strconv.Atoi(fmt.Sprint(sub))
 
 		var user models.User
-		result := receiver.db.Where(&models.User{Id: uint(userId)}).First(&user)
-		if result.Error != nil {
-			resp := utils.ResponseFailed{
-				Code:       0,
-				StatusCode: utils.ResponseStatusCodeFailed,
-				Message:    "the user belonging to this token no logger exists",
-			}
-			c.AbortWithStatusJSON(http.StatusUnauthorized, resp)
+		err = receiver.db.Where(&models.User{Id: uint(userId)}).First(&user).Error
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, utils.GetRespError("the user belonging to this token no logger exists", nil))
 			return
 		}
 

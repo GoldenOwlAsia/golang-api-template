@@ -3,17 +3,16 @@ package services
 import (
 	"api/api/v1/requests"
 	"api/api/v1/responses"
-	"api/configs"
 	"api/models"
-	"api/pkgs/jwt"
+	"api/pkgs/jwt_auth_token"
 	"api/repository"
 	"api/utils"
 	"errors"
 	"gorm.io/gorm"
+	"os"
+	"strconv"
 
-	// "fmt"
 	"strings"
-	"time"
 )
 
 type UserService struct {
@@ -77,21 +76,16 @@ func (receiver UserService) Login(req requests.UserLoginRequest) (resp responses
 		err = errors.New("invalid username or password")
 		return
 	}
-
+	var userIdString = strconv.FormatUint(uint64(userRes.Id), 10)
 	if err = utils.VerifyPassword(userRes.Password, req.Password); err != nil {
 		err = errors.New("invalid username or password")
 		return
 	}
-
-	expiredTime := time.Now().Add(configs.ConfApp.TokenExpiresIn)
-	token, err := jwt.GenerateToken(userRes, expiredTime, configs.ConfApp.TokenSecret)
-	if err != nil {
-		return
-	}
-
+	accessToken, _ := jwt_auth_token.GenerateAccessToken(userIdString, os.Getenv("SECRET_KEY"))
+	refreshToken, _ := jwt_auth_token.GenerateRefreshToken(userIdString, os.Getenv("SECRET_KEY"))
 	resp = responses.UserLoginResponse{
-		Token:   token,
-		Expires: expiredTime.Format("2006-01-02 15:04:05"),
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
 	return
 }

@@ -3,9 +3,11 @@ package v1
 import (
 	"api/api/v1/requests"
 	"api/configs"
+	"api/pkgs/jwt_auth_token"
 	"api/services"
 	"api/utils"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -97,7 +99,7 @@ func (receiver UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("token", resLogin.Token, configs.ConfApp.TokenMaxAge*60, "/", configs.ConfApp.Domain, false, true)
+	//c.SetCookie("token", resLogin.AccessToken, configs.ConfApp.TokenMaxAge*60, "/", configs.ConfApp.Domain, false, true)
 
 	c.JSON(http.StatusOK, utils.GetRespSuccess("welcome back", resLogin))
 }
@@ -116,4 +118,42 @@ func (receiver UserHandler) Logout(c *gin.Context) {
 	c.SetCookie("token", "", -1, "/", configs.ConfApp.Domain, false, true)
 
 	c.JSON(http.StatusOK, utils.GetRespSuccess("ok", nil))
+}
+
+func (receiver UserHandler) GenerateTokenHandler(c *gin.Context) {
+	// get user ID from context
+	userId, ok := c.Get("user_id")
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "user ID not found"})
+		return
+	}
+
+	// generate token
+	token, err := jwt_auth_token.GenerateAccessToken(userId.(string), os.Getenv("SECRET_KEY"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
+		return
+	}
+
+	// return token
+	c.JSON(http.StatusOK, token)
+}
+
+func (receiver UserHandler) RefreshAccessTokenHandler(c *gin.Context) {
+	// get refresh token from request
+	refreshTokenString, ok := c.GetPostForm("refresh_token")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "refresh token not found"})
+		return
+	}
+
+	// refresh access token
+	accessToken, err := jwt_auth_token.RefreshAccessToken(refreshTokenString)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// return access token
+	c.JSON(http.StatusOK, gin.H{"access_token": accessToken})
 }

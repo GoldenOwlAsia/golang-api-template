@@ -29,6 +29,8 @@ func InitRouter(app *gin.Engine, appHandler api.AppHandler, db *gorm.DB, stream 
 		usersV1.GET("user", middlewareFunc.DeserializeUser(), appHandler.User.GetByUsername)
 		usersV1.POST("user/login", appHandler.User.Login)
 		usersV1.POST("user/logout", middlewareFunc.DeserializeUser(), appHandler.User.Logout)
+		usersV1.POST("user/GenerateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
+		usersV1.POST("user/RefreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
 	}
 
 	docs.SwaggerInfo.BasePath = ""
