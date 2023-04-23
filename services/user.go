@@ -6,7 +6,7 @@ import (
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
-	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
+	jwt_token "github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt-token"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
@@ -30,13 +30,13 @@ func (s UserService) Login(req requests.UserLoginRequest) (resp responses.UserLo
 		err = errors.New("invalid username or password")
 		return
 	}
-	var userIdString = cast.ToString(user.ID)
+	var userIDString = cast.ToString(user.ID)
 	if err = utils.VerifyPassword(user.Password, req.Password); err != nil {
 		err = errors.New("invalid username or password")
 		return
 	}
-	accessToken, _ := jwt_auth_token.GenerateAccessToken(userIdString, configs.ConfApp.SecretKey)
-	refreshToken, _ := jwt_auth_token.GenerateRefreshToken(userIdString, configs.ConfApp.SecretKey)
+	accessToken, _ := jwt_token.GenerateAccessToken(userIDString, configs.ConfApp.SecretKey)
+	refreshToken, _ := jwt_token.GenerateRefreshToken(userIDString, configs.ConfApp.SecretKey)
 	resp = responses.UserLoginResponse{
 		User:         user,
 		AccessToken:  accessToken,

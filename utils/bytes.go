@@ -33,5 +33,5 @@ func HumanFileSize(size float64) string {
 	base := math.Log(size) / math.Log(1024)
 	getSize := Round(math.Pow(1024, base-math.Floor(base)), .5, 2)
 	getSuffix := suffixes[int(math.Floor(base))]
-	return strconv.FormatFloat(getSize, 'f', -1, 64) + " " + string(getSuffix)
+	return strconv.FormatFloat(getSize, 'f', -1, 64) + " " + getSuffix
 }

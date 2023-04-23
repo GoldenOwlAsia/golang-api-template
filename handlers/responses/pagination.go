@@ -33,13 +33,10 @@ func Pagination(c *gin.Context) PaginatedData {
 		switch key {
 		case "limit":
 			limit, _ = strconv.Atoi(queryValue)
-			break
 		case "page":
 			page, _ = strconv.Atoi(queryValue)
-			break
 		case "sort":
 			sort = queryValue
-			break
 		}
 	}
 

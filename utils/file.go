@@ -19,7 +19,7 @@ func MakeFilenameUnique(filename string) string {
 
 func CleanFileName(fileName string) string {
 	// Remove any characters that are not letters, numbers, or spaces
-	reg := regexp.MustCompile("[^a-zA-Z0-9\\s]+")
+	reg := regexp.MustCompile(`[^a-zA-Z0-9\s]+`)
 	cleanedName := reg.ReplaceAllString(fileName, "_")
 
 	// Replace any spaces with hyphens

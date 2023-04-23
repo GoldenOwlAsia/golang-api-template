@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
-	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
+	jwt_token "github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt-token"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
@@ -49,14 +49,14 @@ func (h *UserHandler) Login(c *gin.Context) {
 
 func (h UserHandler) GenerateTokenHandler(c *gin.Context) {
 	// get user ID from context
-	userId, ok := c.Get("user_id")
+	userID, ok := c.Get("user_id")
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "user ID not found"})
 		return
 	}
 
 	// generate token
-	token, err := jwt_auth_token.GenerateAccessToken(userId.(string), configs.ConfApp.SecretKey)
+	token, err := jwt_token.GenerateAccessToken(userID.(string), configs.ConfApp.SecretKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 		return
@@ -75,7 +75,7 @@ func (h *UserHandler) RefreshAccessTokenHandler(c *gin.Context) {
 	}
 
 	// refresh access token
-	accessToken, err := jwt_auth_token.RefreshAccessToken(refreshTokenString)
+	accessToken, err := jwt_token.RefreshAccessToken(refreshTokenString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

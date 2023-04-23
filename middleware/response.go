@@ -3,6 +3,7 @@ package middleware
 import (
 	"bytes"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,7 @@ func HandleResponse(c *gin.Context) {
 	c.Writer = blw
 	c.Next()
 	statusCode := c.Writer.Status()
-	if statusCode >= 400 {
+	if statusCode >= http.StatusBadRequest {
 		// ok this is a request with error, let's make a record for it
 		// now print body (or log in your preferred way)
 		fmt.Println("Response body: " + blw.body.String())

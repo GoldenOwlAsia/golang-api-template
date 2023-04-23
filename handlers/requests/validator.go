@@ -18,42 +18,34 @@ type DefaultValidator struct {
 
 var _ binding.StructValidator = &DefaultValidator{}
 
-// ValidateStruct ...
 func (v *DefaultValidator) ValidateStruct(obj interface{}) error {
-
 	if kindOfData(obj) == reflect.Struct {
-
-		v.lazyinit()
-
+		v.lazyInit()
 		if err := v.validate.Struct(obj); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
-// Engine ...
 func (v *DefaultValidator) Engine() interface{} {
-	v.lazyinit()
+	v.lazyInit()
 	return v.validate
 }
 
-func (v *DefaultValidator) lazyinit() {
+func (v *DefaultValidator) lazyInit() {
 	v.once.Do(func() {
-
 		v.validate = validator.New()
 		v.validate.SetTagName("binding")
 
 		// add any custom validations etc. here
 
-		//Custom rule for user full name
+		// Custom rule for user full name
 		v.validate.RegisterValidation("fullName", ValidateFullName)
 	})
 }
 
 func kindOfData(data interface{}) reflect.Kind {
-
 	value := reflect.ValueOf(data)
 	valueType := value.Kind()
 
@@ -63,16 +55,15 @@ func kindOfData(data interface{}) reflect.Kind {
 	return valueType
 }
 
-// ValidateFullName implements validator.Func
 func ValidateFullName(fl validator.FieldLevel) bool {
-	//Remove the extra space
+	// Remove the extra space
 	space := regexp.MustCompile(`\s+`)
 	name := space.ReplaceAllString(fl.Field().String(), " ")
 
-	//Remove trailing spaces
+	// Remove trailing spaces
 	name = strings.TrimSpace(name)
 
-	//To support all possible languages
+	// To support all possible languages
 	matched, _ := regexp.Match(`^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;'"|=.,0123456789]{3,20}$`, []byte(name))
 	return matched
 }

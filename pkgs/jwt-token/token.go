@@ -1,4 +1,4 @@
-package jwt_auth_token
+package jwt_token
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func GenerateAccessToken(userId string, key string) (string, error) {
 	// define token claims
 	claims := jwt.MapClaims{
 		"user_id": userId,
-		"exp":     time.Now().Add(time.Minute * 15).Unix(), // set token to expire in 15 mins
+		"exp":     time.Now().Add(configs.AccessTokenExpireTime).Unix(), // set token to expire in 15 mins
 	}
 
 	// create token with claims
@@ -33,11 +33,11 @@ func GenerateAccessToken(userId string, key string) (string, error) {
 	return signedToken, nil
 }
 
-func GenerateRefreshToken(userId string, key string) (string, error) {
+func GenerateRefreshToken(userId, key string) (string, error) {
 	// define token claims
 	claims := jwt.MapClaims{
 		"user_id": userId,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), // set token to expire in 24 hours
+		"exp":     time.Now().Add(configs.RefreshTokenExpireTime).Unix(), // set token to expire in 24 hours
 	}
 
 	// create token with claims
@@ -71,13 +71,13 @@ func RefreshAccessToken(refreshTokenString string) (string, error) {
 	}
 
 	// get user ID from token
-	userId, ok := refreshToken.Claims.(jwt.MapClaims)["user_id"].(string)
+	userID, ok := refreshToken.Claims.(jwt.MapClaims)["user_id"].(string)
 	if !ok {
 		return "", fmt.Errorf("invalid token")
 	}
 
 	// generate new access token
-	accessToken, err := GenerateAccessToken(userId, configs.ConfApp.SecretKey)
+	accessToken, err := GenerateAccessToken(userID, configs.ConfApp.SecretKey)
 	if err != nil {
 		return "", err
 	}
@@ -110,24 +110,4 @@ func ValidateAccessToken(tokenString string, key string) (*jwt.Token, error) {
 
 	// return token
 	return token, nil
-}
-
-func GenerateToken(userId string) (*Token, error) {
-	// generate access token
-	accessToken, err := GenerateAccessToken(userId, configs.ConfApp.SecretKey)
-	if err != nil {
-		return nil, err
-	}
-
-	// generate refresh token
-	refreshToken, err := GenerateRefreshToken(userId, configs.ConfApp.SecretKey)
-	if err != nil {
-		return nil, err
-	}
-
-	// return token struct
-	return &Token{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}, nil
 }

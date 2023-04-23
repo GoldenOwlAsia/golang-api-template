@@ -1,22 +1,22 @@
 package migrations
 
 import (
+	"log"
+
 	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"gorm.io/gorm"
-	"log"
 )
 
-func Seed(DB *gorm.DB) {
+func Seed(db *gorm.DB) {
 	if configs.ConfApp.AppMode == "release" {
 		return
 	}
-	log.Println("Seeding Data...")
-	seedUser(DB)
+	seedUser(db)
 }
 
-func seedUser(DB *gorm.DB) {
+func seedUser(db *gorm.DB) {
 	// Create some sample users
 	hashPassword, err := utils.HashPassword("1234")
 	if err != nil {
@@ -28,7 +28,7 @@ func seedUser(DB *gorm.DB) {
 
 	// Insert the users into the database
 	for _, user := range users {
-		result := DB.Where("username = ?", user.Username).FirstOrCreate(&user)
+		result := db.Where("username = ?", user.Username).FirstOrCreate(&user)
 		if result.Error != nil {
 			log.Printf("failed to create user: %v", result.Error)
 		}

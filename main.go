@@ -37,7 +37,7 @@ var (
 // @securityDefinitions.basic  BasicAuth
 func main() {
 	InitEnv()
-	InitDb()
+	InitDB()
 	InitGin()
 	InitSentry()
 	migrations.Migrate(DB)
@@ -57,12 +57,9 @@ func InitEnv() {
 	if err != nil {
 		log.Fatal("cannot load configs: ", err)
 	}
-	if err = os.Setenv("TZ", configs.ConfApp.AppTimezone); err != nil {
-		log.Fatal("cannot set TZ config: ", err)
-	}
 }
 
-func InitDb() {
+func InitDB() {
 	dsn := getDSN()
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: func() logger.Interface {
@@ -76,9 +73,7 @@ func InitDb() {
 	if err != nil {
 		log.Println("cannot connect to database: ", err)
 	}
-
 	DB = db
-
 }
 
 func getDSN() (dsn string) {
@@ -114,8 +109,9 @@ func InitSentry() {
 func SpinUp(msg string) (server *http.Server) {
 	// -- Graceful restart or stop server --
 	server = &http.Server{
-		Addr:    fmt.Sprintf(":%s", configs.ConfApp.Port), // + configs.ConfApp.Port
-		Handler: Gin,
+		ReadHeaderTimeout: configs.ReadHeaderTimeout,
+		Addr:              fmt.Sprintf(":%s", configs.ConfApp.Port), // + configs.ConfApp.Port
+		Handler:           Gin,
 	}
 	fmt.Printf("[GoldenOwl API - %s] Start to listening the incoming requests on http address: %s", gin.Mode(), server.Addr)
 	fmt.Println(msg)
@@ -141,5 +137,5 @@ func SpinUp(msg string) (server *http.Server) {
 
 	log.Println("Server exiting")
 
-	return
+	return server
 }

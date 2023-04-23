@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// Article ...
 type Article struct {
 	ID        uint           `json:"id" gorm:"primaryKey;autoIncrement:true"`
 	CreatedAt time.Time      `json:"created_at"`

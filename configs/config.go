@@ -1,8 +1,9 @@
 package configs
 
 import (
-	"github.com/spf13/viper"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 var (
@@ -14,7 +15,7 @@ type Config struct {
 	SecretKey        string        `mapstructure:"SECRET_KEY"`
 	AppTimezone      string        `mapstructure:"APP_TIMEZONE"`
 	Port             string        `mapstructure:"PORT"`
-	HttpSchema       string        `mapstructure:"HTTP_SCHEMA"`
+	HTTPSchema       string        `mapstructure:"HTTP_SCHEMA"`
 	Domain           string        `mapstructure:"DOMAIN"`
 	DatabaseUserName string        `mapstructure:"DATABASE_USER_NAME"`
 	DatabasePassword string        `mapstructure:"DATABASE_PASSWORD"`
@@ -41,5 +42,6 @@ func LoadConfig(path string) (config Config, err error) {
 
 	err = viper.Unmarshal(&config)
 	ConfApp = config
+
 	return
 }

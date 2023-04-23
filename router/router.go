@@ -22,21 +22,17 @@ func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin
 		})
 	})
 
-	usersV1 := app.Group("api/v1/user")
-	{
-		usersV1.POST("/login", appHandler.User.Login)
-		usersV1.POST("/generateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
-		usersV1.POST("/refreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
-	}
+	users := app.Group("api/v1/user")
+	users.POST("/login", appHandler.User.Login)
+	users.POST("/generateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
+	users.POST("/refreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
 
-	articlesAPI := app.Group("api/v1/articles")
-	{
-		articlesAPI.GET("/", middlewareFunc.DeserializeUser(), appHandler.Article.All)
-		articlesAPI.GET("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Get)
-		articlesAPI.POST("/", middlewareFunc.DeserializeUser(), appHandler.Article.Create)
-		articlesAPI.PUT("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Update)
-		articlesAPI.DELETE("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Delete)
-	}
+	articles := app.Group("api/v1/articles")
+	articles.GET("/", middlewareFunc.DeserializeUser(), appHandler.Article.All)
+	articles.GET("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Get)
+	articles.POST("/", middlewareFunc.DeserializeUser(), appHandler.Article.Create)
+	articles.PUT("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Update)
+	articles.DELETE("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Delete)
 
 	docs.SwaggerInfo.BasePath = ""
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
