@@ -21,7 +21,7 @@ func NewJwtMiddleware(db *gorm.DB) *jwtMiddleware {
 	return &jwtMiddleware{db: db}
 }
 
-func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
+func (m jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var token string
 		cookie, err := c.Cookie("token")
@@ -49,7 +49,7 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 		userId, _ := strconv.Atoi(fmt.Sprint(sub))
 
 		var user models.User
-		err = receiver.db.Where(&models.User{ID: uint(userId)}).First(&user).Error
+		err = m.db.Where(&models.User{ID: uint(userId)}).First(&user).Error
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, utils.GetRespError("the user belonging to this token no logger exists", nil))
 			return

@@ -24,10 +24,7 @@ func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin
 
 	usersV1 := app.Group("api/v1/user")
 	{
-		usersV1.POST("/", appHandler.User.Create)
-		usersV1.GET("/", middlewareFunc.DeserializeUser(), appHandler.User.GetByUsername)
 		usersV1.POST("/login", appHandler.User.Login)
-		usersV1.POST("/logout", middlewareFunc.DeserializeUser(), appHandler.User.Logout)
 		usersV1.POST("/generateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
 		usersV1.POST("/refreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
 	}

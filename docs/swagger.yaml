@@ -1,33 +1,5 @@
 basePath: /
 definitions:
-  gorms.User:
-    properties:
-      approved_status:
-        type: string
-      created_at:
-        type: string
-      email:
-        type: string
-      role:
-        type: string
-      status:
-        type: string
-      updated_at:
-        type: string
-      username:
-        type: string
-    type: object
-  requests.UserCreateRequest:
-    properties:
-      confirm_password:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      username:
-        type: string
-    type: object
   requests.UserLoginRequest:
     properties:
       password:
@@ -37,9 +9,11 @@ definitions:
     type: object
   responses.UserLoginResponse:
     properties:
-      expires:
+      access_token:
         type: string
-      token:
+      id:
+        type: string
+      refresh_token:
         type: string
     type: object
   utils.ResponseFailed:
@@ -63,8 +37,8 @@ definitions:
     type: object
 info:
   contact:
-    email: joe.nghiem.goldenowl@gmail.com
-    name: joe.nghiem
+    email: hello@goldenowl.asia
+    name: goldenowl.asia
   description: This API is for GoldenOwl API application
   license:
     name: Apache 2.0
@@ -72,73 +46,6 @@ info:
   title: GoldenOwl Gin API
   version: 1.0.0
 paths:
-  /api/v1/user:
-    get:
-      description: GetByUsername by username
-      parameters:
-      - description: Authorization
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: username param
-        in: query
-        name: username
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/utils.ResponseSuccess'
-            - properties:
-                Data:
-                  $ref: '#/definitions/gorms.User'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.ResponseFailed'
-      summary: Get user by username
-      tags:
-      - users
-    post:
-      consumes:
-      - application/json
-      description: Create by username, password, email
-      parameters:
-      - description: body params
-        in: body
-        name: json
-        required: true
-        schema:
-          $ref: '#/definitions/requests.UserCreateRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            allOf:
-            - $ref: '#/definitions/utils.ResponseSuccess'
-            - properties:
-                Data:
-                  $ref: '#/definitions/gorms.User'
-              type: object
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/utils.ResponseFailed'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.ResponseFailed'
-      summary: Create user
-      tags:
-      - users
   /api/v1/user/login:
     post:
       consumes:
@@ -172,30 +79,6 @@ paths:
           schema:
             $ref: '#/definitions/utils.ResponseFailed'
       summary: Login user to system
-      tags:
-      - users
-  /api/v1/user/logout:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Authorization
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/utils.ResponseSuccess'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.ResponseFailed'
-      summary: Logout user
       tags:
       - users
 securityDefinitions:
