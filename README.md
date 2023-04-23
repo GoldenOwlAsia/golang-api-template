@@ -140,8 +140,8 @@ response:
          "role": "Admin",
          "status": ""
       },
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIyNTE2NjEsInVzZXJfaWQiOiIxIn0.KitgldojU8OfgQYATlbMMnGH3BTM4KG5Ga_nWUoDLSU",
-      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIzMzcxNjEsInVzZXJfaWQiOiIxIn0.fMlRnxptkEBaDZ_x52tiS2SiS6JDdT_GfFxbXhVihFE"
+      "access_token": "xxx.xxx.xxx",
+      "refresh_token": "yyy.yyy.yyy"
    }
 }
 ```
