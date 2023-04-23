@@ -8,9 +8,9 @@ import (
 
 // Article ...
 type Article struct {
-	ID        uint `gorm:"primaryKey;autoIncrement:true"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint           `json:"id" gorm:"primaryKey;autoIncrement:true"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"-"`
 	UserID    uint           `json:"-"`
 	User      *User          `gorm:"foreignKey:UserID" json:"user,omitempty"`

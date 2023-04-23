@@ -15,7 +15,7 @@ type PaginatedResponse struct {
 }
 
 type PaginatedData struct {
-	Limit      int    `json:"limit`
+	Limit      int    `json:"limit"`
 	Total      int    `json:"total"`
 	TotalPages int    `json:"total_pages"`
 	PerPage    int    `json:"per_page"`

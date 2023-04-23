@@ -146,47 +146,31 @@ curl -L 'localhost:8080/api/v1/articles' \
 response:
 ```json
 {
-    "_metadata": {
-        "Limit": 2,
-        "total": 54,
-        "total_pages": 6,
-        "per_page": 10,
-        "page": 1,
-        "sort": "created_at DESC"
-    },
-    "records": [
-        {
-            "ID": 59,
-            "CreatedAt": "2023-04-23T10:38:29.80017Z",
-            "UpdatedAt": "2023-04-23T10:38:29.80017Z",
-            "user": {
-                "ID": 1,
-                "CreatedAt": "2023-04-19T14:32:21.978531Z",
-                "UpdatedAt": "2023-04-19T14:32:21.978531Z",
-                "username": "admin",
-                "email": "admin@example.com",
-                "role": "Admin",
-                "status": ""
-            },
-            "title": "test",
-            "content": "test content"
-        },
-        {
-            "ID": 58,
-            "CreatedAt": "2023-04-23T10:38:23.896966Z",
-            "UpdatedAt": "2023-04-23T10:38:23.896966Z",
-            "user": {
-                "ID": 1,
-                "CreatedAt": "2023-04-19T14:32:21.978531Z",
-                "UpdatedAt": "2023-04-19T14:32:21.978531Z",
-                "username": "admin",
-                "email": "admin@example.com",
-                "role": "Admin",
-                "status": ""
-            },
-            "title": "test",
-            "content": "test content"
-        }
-    ]
+   "_metadata": {
+      "limit": 10,
+      "total": 54,
+      "total_pages": 6,
+      "per_page": 10,
+      "page": 1,
+      "sort": "created_at DESC"
+   },
+   "records": [
+      {
+         "id": 59,
+         "created_at": "2023-04-23T10:38:29.80017Z",
+         "updated_at": "2023-04-23T10:38:29.80017Z",
+         "user": {
+            "id": 1,
+            "created_at": "2023-04-19T14:32:21.978531Z",
+            "updated_at": "2023-04-19T14:32:21.978531Z",
+            "username": "admin",
+            "email": "admin@example.com",
+            "role": "Admin",
+            "status": ""
+         },
+         "title": "test",
+         "content": "test content"
+      }
+   ]
 }
 ```

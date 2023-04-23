@@ -2,6 +2,6 @@ package configs
 
 const (
 	DefaultPage        = 1
-	DefaultItemPerPage = 2
+	DefaultItemPerPage = 10
 	DefaultSorting     = "created_at DESC"
 )
