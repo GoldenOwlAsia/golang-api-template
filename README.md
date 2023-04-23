@@ -8,27 +8,7 @@
 2. Install Postgres database. You can download the Postgres in this [page](https://www.postgresql.org/download/). You should install version 14.1
 3. Make an `.env` file from `.env.example`
 4. Go to `pgadmin` create a database. Note the name of it and add to `.env`
-5. Migrations & Seeding data
-
-   create all database tables
-   ```sh
-   go run cmd/run_migration.go
-   ```
-   migrate and seed your database with dummy data
-   ```sh
-   go run cmd/run_migration.go --seed
-   ```
-6. Run command to create user for login
-
-   `curl --location 'pathtohost' \
-   --header 'Content-Type: application/json' \
-   --data-raw '{
-   "confirm_password": "123",
-   "email": "admin@gmail.com",
-   "password": "123",
-   "username": "admin"
-   }'`
-7. Install **Air - live reload fo Go apps**. You can visit this [page](https://github.com/cosmtrek/air).
+5. Install **Air - live reload fo Go apps**. You can visit this [page](https://github.com/cosmtrek/air).
 
 ### 💿 Installation
 
@@ -105,14 +85,12 @@ go test ./utils/array_test.go ./utils/array.go
 # one unit test
 # - api/utils is a package name
 # - TestChunkSlice is a testcase
-go test api/utils -run TestChunkSlice 
+go test api/utils -run TestChunkSlice
 ```
 
 #### 🧪 Improve code with lint checks
 ```sh
 make lint
-#or
-golangci-lint run -v
 ```
 
 ### Demo
@@ -147,9 +125,7 @@ response:
 ```
 #### Articles
 ```shell
-curl -L 'localhost:8080/api/v1/articles' \
--H 'Authorization: Bearer xxx.xxx.xxx-xxx' \
--d ''
+curl -L 'localhost:8080/api/v1/articles' -H 'Authorization: Bearer xxx.xxx.xxx-xxx'
 ```
 response:
 ```json

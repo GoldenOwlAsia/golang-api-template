@@ -1,13 +1,13 @@
 package infras
 
 import (
-	controllers2 "github.com/GoldenOwlAsia/golang-api-template/handlers"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers"
 	"gorm.io/gorm"
 )
 
 type AppHandler struct {
-	User    controllers2.UserHandler
-	Article controllers2.ArticleHandler
+	User    handlers.UserHandler
+	Article handlers.ArticleHandler
 }
 
 func DI(db *gorm.DB) AppHandler {
