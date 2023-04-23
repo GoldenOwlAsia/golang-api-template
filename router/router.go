@@ -35,6 +35,7 @@ func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin
 	articlesAPI := app.Group("api/v1/articles")
 	{
 		articlesAPI.GET("/", middlewareFunc.DeserializeUser(), appHandler.Article.All)
+		articlesAPI.GET("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Get)
 		articlesAPI.POST("/", middlewareFunc.DeserializeUser(), appHandler.Article.Create)
 		articlesAPI.PUT("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Update)
 		articlesAPI.DELETE("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Delete)

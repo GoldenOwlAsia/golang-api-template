@@ -1,13 +1,14 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 type ArticleHandler struct {
@@ -16,68 +17,80 @@ type ArticleHandler struct {
 
 func NewArticleHandler(db *gorm.DB) ArticleHandler {
 	return ArticleHandler{
-		db,
+		DB: db,
 	}
 }
 
-func (receiver ArticleHandler) All(c *gin.Context) {
+func (h *ArticleHandler) All(c *gin.Context) {
 	pagination := responses.Pagination(c)
-	baseModel := &models.Article{}
-	baseQuery := receiver.DB.Model(baseModel).Preload("User")
-	data, paginated, _ := responses.Paginate(baseQuery, baseModel, &pagination)
-	c.JSON(http.StatusOK, responses.PaginatedResponse{
-		Metadata: paginated,
-		Records:  data,
+	baseQuery := h.DB.Model(&models.Article{}).Preload("User")
+	data, paginated, err := responses.Paginate(baseQuery, &models.Article{}, &pagination)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"metadata": paginated,
+		"records":  data,
 	})
 }
 
-func (receiver ArticleHandler) Get(id int64) (*models.Article, error) {
+func (h *ArticleHandler) Get(c *gin.Context) {
+	id := cast.ToInt64(c.Param("id"))
 	var article models.Article
-	err := receiver.DB.Where("id = ?", id).First(&article).Error
-	return &article, err
+	err := h.DB.Where("id = ?", id).First(&article).Error
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": article})
 }
 
-var articleForm = new(requests.ArticleForm)
-
-func (receiver ArticleHandler) Create(c *gin.Context) {
+func (h *ArticleHandler) Create(c *gin.Context) {
 	var form requests.CreateArticleForm
-	currentUser := c.MustGet("currentUser").(models.User)
-	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
-		message := articleForm.Create(validationErr)
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
+	if err := c.ShouldBindJSON(&form); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
 	}
-	model := models.Article{
+	currentUser := c.MustGet("currentUser").(models.User)
+	article := models.Article{
 		Title:   form.Title,
 		Content: form.Content,
 		UserID:  currentUser.ID,
 	}
-	if err := receiver.DB.Create(&model).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Article could not be created"})
+	if err := h.DB.Create(&article).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Article created", "data": model})
+	c.JSON(http.StatusOK, gin.H{"message": "Article created", "data": article})
 }
 
-func (receiver ArticleHandler) Update(c *gin.Context) {
-	id := cast.ToUint(c.Param("id"))
+func (h *ArticleHandler) Update(c *gin.Context) {
+	id := cast.ToInt64(c.Param("id"))
 	var form requests.CreateArticleForm
-	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
-		message := articleForm.Create(validationErr)
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
+	if err := c.ShouldBindJSON(&form); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
 	}
-	model := models.Article{ID: id}
-	if err := receiver.DB.First(&model).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "model not found!"})
+	article := models.Article{}
+	if err := h.DB.First(&article, id).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+		return
 	}
-	model.Title = form.Title
-	model.Content = form.Content
-	if err := receiver.DB.Save(model).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Article could not be saved"})
+	article.Title = form.Title
+	article.Content = form.Content
+	if err := h.DB.Save(&article).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Article saved", "data": model})
+	c.JSON(http.StatusOK, gin.H{"message": "Article updated", "data": article})
 }
 
-func (receiver ArticleHandler) Delete(c *gin.Context) {
-	id := cast.ToUint(c.Param("id"))
-	err := receiver.DB.Delete(&models.Article{ID: id}).Error
-	c.JSON(http.StatusOK, err)
+func (h *ArticleHandler) Delete(c *gin.Context) {
+	id := cast.ToInt64(c.Param("id"))
+	if err := h.DB.Delete(&models.Article{}, id).Error; err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": id})
 }

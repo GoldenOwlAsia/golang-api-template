@@ -15,82 +15,59 @@ type CreateArticleForm struct {
 	Content string `form:"content" json:"content" binding:"required,min=3,max=1000"`
 }
 
-// Title ...
-func (f ArticleForm) Title(tag string, errMsg ...string) (message string) {
+// getMessage returns an error message based on the validation tag.
+func getMessage(field, tag string, errMsg ...string) string {
 	switch tag {
 	case "required":
 		if len(errMsg) == 0 {
-			return "Please enter the article title"
+			return "Please enter the " + field
 		}
 		return errMsg[0]
 	case "min", "max":
-		return "Title should be between 3 to 100 characters"
+		return field + " should be between 3 to 1000 characters"
 	default:
 		return "Something went wrong, please try again later"
 	}
 }
 
-// Content ...
-func (f ArticleForm) Content(tag string, errMsg ...string) (message string) {
-	switch tag {
-	case "required":
-		if len(errMsg) == 0 {
-			return "Please enter the article content"
-		}
-		return errMsg[0]
-	case "min", "max":
-		return "Content should be between 3 to 1000 characters"
-	default:
-		return "Something went wrong, please try again later"
-	}
-}
-
-// Create ...
+// Create returns an error message for create form.
 func (f ArticleForm) Create(err error) string {
 	switch err.(type) {
 	case validator.ValidationErrors:
-
 		if _, ok := err.(*json.UnmarshalTypeError); ok {
 			return "Something went wrong, please try again later"
 		}
-
 		for _, err := range err.(validator.ValidationErrors) {
-			if err.Field() == "Title" {
-				return f.Title(err.Tag())
-			}
-			if err.Field() == "Content" {
-				return f.Content(err.Tag())
+			switch err.Field() {
+			case "Title":
+				return getMessage("Title", err.Tag())
+			case "Content":
+				return getMessage("Content", err.Tag())
 			}
 		}
-
 	default:
 		return "Invalid request"
 	}
-
 	return "Something went wrong, please try again later"
 }
 
-// Update ...
+// Update returns an error message for update form.
 func (f ArticleForm) Update(err error) string {
 	switch err.(type) {
 	case validator.ValidationErrors:
-
 		if _, ok := err.(*json.UnmarshalTypeError); ok {
 			return "Something went wrong, please try again later"
 		}
-
 		for _, err := range err.(validator.ValidationErrors) {
-			if err.Field() == "Title" {
-				return f.Title(err.Tag())
-			}
-			if err.Field() == "Content" {
-				return f.Content(err.Tag())
+			switch err.Field() {
+			case "Title":
+				return getMessage("Title", err.Tag())
+			case "Content":
+				return getMessage("Content", err.Tag())
 			}
 		}
-
 	default:
 		return "Invalid request"
 	}
-
 	return "Something went wrong, please try again later"
 }
