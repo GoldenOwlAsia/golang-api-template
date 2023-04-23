@@ -5,7 +5,6 @@ import (
 	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/gin-gonic/gin"
-	"github.com/gookit/goutil/dump"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
 	"net/http"
@@ -46,18 +45,14 @@ func (receiver ArticleHandler) Create(c *gin.Context) {
 	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
 		message := articleForm.Create(validationErr)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
-		return
 	}
 	model := models.Article{
 		Title:   form.Title,
 		Content: form.Content,
 		UserID:  currentUser.ID,
 	}
-	err := receiver.DB.Create(&model).Error
-	if err != nil {
-		dump.P(err.Error())
+	if err := receiver.DB.Create(&model).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Article could not be created"})
-		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Article created", "data": model})
 }
@@ -65,25 +60,18 @@ func (receiver ArticleHandler) Create(c *gin.Context) {
 func (receiver ArticleHandler) Update(c *gin.Context) {
 	id := cast.ToUint(c.Param("id"))
 	var form forms.CreateArticleForm
-	currentUser := c.MustGet("currentUser").(models.User)
-	_ = currentUser
-
 	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
 		message := articleForm.Create(validationErr)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})
-		return
 	}
 	model := models.Article{ID: id}
-	err := receiver.DB.First(&model).Error
-	if err != nil {
+	if err := receiver.DB.First(&model).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "model not found!"})
 	}
 	model.Title = form.Title
 	model.Content = form.Content
-	err = receiver.DB.Save(model).Error
-	if err != nil {
+	if err := receiver.DB.Save(model).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": "Article could not be saved"})
-		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Article saved", "data": model})
 }

@@ -13,7 +13,7 @@ type Article struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `json:"-"`
 	UserID    uint           `json:"-"`
-	User      User           `gorm:"foreignKey:UserID" json:"user"`
+	User      *User          `gorm:"foreignKey:UserID" json:"user,omitempty"`
 	Title     string         `json:"title"`
 	Content   string         `json:"content"`
 }
