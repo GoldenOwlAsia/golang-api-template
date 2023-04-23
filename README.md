@@ -128,13 +128,21 @@ curl -L 'localhost:8080/api/v1/user/login' \
 response:
 ```json
 {
-    "status": "success",
-    "message": "welcome back",
-    "data": {
-        "id": "",
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIyNDkzMDAsInVzZXJfaWQiOiIxIn0.6A1njyesyO78yAcyvP3Qnp5PKLI-kAMqa7qTswBOrR0",
-        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIzMzQ4MDAsInVzZXJfaWQiOiIxIn0.f31ckZtq5yPTgn0GCboR9CUclqWpChts8Bj4Cnx2AMk"
-    }
+   "status": "success",
+   "message": "welcome back",
+   "data": {
+      "user": {
+         "id": 1,
+         "created_at": "2023-04-19T14:32:21.978531Z",
+         "updated_at": "2023-04-19T14:32:21.978531Z",
+         "username": "admin",
+         "email": "admin@example.com",
+         "role": "Admin",
+         "status": ""
+      },
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIyNTE2NjEsInVzZXJfaWQiOiIxIn0.KitgldojU8OfgQYATlbMMnGH3BTM4KG5Ga_nWUoDLSU",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIzMzcxNjEsInVzZXJfaWQiOiIxIn0.fMlRnxptkEBaDZ_x52tiS2SiS6JDdT_GfFxbXhVihFE"
+   }
 }
 ```
 #### Articles

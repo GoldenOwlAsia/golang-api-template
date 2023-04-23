@@ -1,7 +1,9 @@
 package responses
 
+import "github.com/GoldenOwlAsia/golang-api-template/models"
+
 type UserLoginResponse struct {
-	Id           string `json:"id"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	User         models.User `json:"user"`
+	AccessToken  string      `json:"access_token"`
+	RefreshToken string      `json:"refresh_token"`
 }

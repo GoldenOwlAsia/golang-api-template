@@ -38,6 +38,7 @@ func (s UserService) Login(req requests.UserLoginRequest) (resp responses.UserLo
 	accessToken, _ := jwt_auth_token.GenerateAccessToken(userIdString, configs.ConfApp.SecretKey)
 	refreshToken, _ := jwt_auth_token.GenerateRefreshToken(userIdString, configs.ConfApp.SecretKey)
 	resp = responses.UserLoginResponse{
+		User:         user,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}

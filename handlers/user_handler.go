@@ -44,9 +44,6 @@ func (h *UserHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, utils.GetRespError(err.Error(), nil))
 		return
 	}
-
-	//c.SetCookie("token", resLogin.AccessToken, configs.ConfApp.TokenMaxAge*60, "/", configs.ConfApp.Domain, false, true)
-
 	c.JSON(http.StatusOK, utils.GetRespSuccess("welcome back", resLogin))
 }
 
