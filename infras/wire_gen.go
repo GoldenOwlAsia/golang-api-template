@@ -7,22 +7,21 @@
 package infras
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1"
-	"github.com/GoldenOwlAsia/golang-api-template/repository"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"gorm.io/gorm"
 )
 
 // Injectors from wire.go:
 
-func InitUserAPI(db *gorm.DB) v1.UserHandler {
-	userRepository := repository.NewUserRepository(db)
-	userService := services.NewUserService(userRepository)
-	userHandler := v1.NewUserHandler(userService)
+func InitUserAPI(db *gorm.DB) handlers.UserHandler {
+	userService := services.NewUserService(db)
+	userHandler := handlers.NewUserHandler(userService)
 	return userHandler
 }
 
-func InitArticleAPI(db *gorm.DB) v1.ArticleHandler {
-	articleHandler := v1.NewArticleHandler(db)
+func InitArticleAPI(db *gorm.DB) handlers.ArticleHandler {
+	articleService := services.NewArticleService(db)
+	articleHandler := handlers.NewArticleHandler(articleService)
 	return articleHandler
 }

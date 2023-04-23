@@ -2,33 +2,36 @@ package services
 
 import (
 	"errors"
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers/responses"
+	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
-	"github.com/GoldenOwlAsia/golang-api-template/repository"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/spf13/cast"
+	"gorm.io/gorm"
 	"os"
 )
 
 type UserService struct {
-	Repo repository.UserRepository
+	DB *gorm.DB
 }
 
-func NewUserService(r repository.UserRepository) UserService {
+func NewUserService(db *gorm.DB) UserService {
 	return UserService{
-		Repo: r,
+		DB: db,
 	}
 }
 
 func (s UserService) Login(req requests.UserLoginRequest) (resp responses.UserLoginResponse, err error) {
-	userRes, err := s.Repo.GetByUsername(req.Username)
-	if err != nil || len(userRes.Username) <= 0 {
+	var user models.User
+	err = s.DB.Where(&models.User{Username: req.Username}).First(&user).Error
+
+	if err != nil || len(user.Username) <= 0 {
 		err = errors.New("invalid username or password")
 		return
 	}
-	var userIdString = cast.ToString(userRes.ID)
-	if err = utils.VerifyPassword(userRes.Password, req.Password); err != nil {
+	var userIdString = cast.ToString(user.ID)
+	if err = utils.VerifyPassword(user.Password, req.Password); err != nil {
 		err = errors.New("invalid username or password")
 		return
 	}

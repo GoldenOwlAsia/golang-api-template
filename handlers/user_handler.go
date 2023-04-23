@@ -1,7 +1,7 @@
-package v1
+package handlers
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"

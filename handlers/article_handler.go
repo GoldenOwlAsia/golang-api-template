@@ -1,44 +1,40 @@
-package v1
+package handlers
 
 import (
+	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/handlers/responses"
+	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"net/http"
 
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
-	"gorm.io/gorm"
 )
 
 type ArticleHandler struct {
-	DB *gorm.DB
+	Service services.ArticleService
 }
 
-func NewArticleHandler(db *gorm.DB) ArticleHandler {
+func NewArticleHandler(service services.ArticleService) ArticleHandler {
 	return ArticleHandler{
-		DB: db,
+		Service: service,
 	}
 }
 
 func (h *ArticleHandler) All(c *gin.Context) {
 	pagination := responses.Pagination(c)
-	baseQuery := h.DB.Model(&models.Article{}).Preload("User")
+	baseQuery := h.Service.All("User")
 	data, paginated, err := responses.Paginate(baseQuery, &models.Article{}, &pagination)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"metadata": paginated,
-		"records":  data,
-	})
+	c.JSON(http.StatusOK, responses.PaginatedResponse{Metadata: paginated, Records: data})
 }
 
 func (h *ArticleHandler) Get(c *gin.Context) {
-	id := cast.ToInt64(c.Param("id"))
-	var article models.Article
-	err := h.DB.Where("id = ?", id).First(&article).Error
+	id := cast.ToUint(c.Param("id"))
+	article, err := h.Service.Get(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Article not found"})
 		return
@@ -52,13 +48,9 @@ func (h *ArticleHandler) Create(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
-	currentUser := c.MustGet("currentUser").(models.User)
-	article := models.Article{
-		Title:   form.Title,
-		Content: form.Content,
-		UserID:  currentUser.ID,
-	}
-	if err := h.DB.Create(&article).Error; err != nil {
+	user := c.MustGet("currentUser").(models.User)
+	article, err := h.Service.Create(form, user)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
@@ -66,20 +58,14 @@ func (h *ArticleHandler) Create(c *gin.Context) {
 }
 
 func (h *ArticleHandler) Update(c *gin.Context) {
-	id := cast.ToInt64(c.Param("id"))
+	id := cast.ToUint(c.Param("id"))
 	var form requests.CreateArticleForm
 	if err := c.ShouldBindJSON(&form); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
-	article := models.Article{}
-	if err := h.DB.First(&article, id).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "Article not found"})
-		return
-	}
-	article.Title = form.Title
-	article.Content = form.Content
-	if err := h.DB.Save(&article).Error; err != nil {
+	article, err := h.Service.Update(id, form)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}
@@ -87,8 +73,9 @@ func (h *ArticleHandler) Update(c *gin.Context) {
 }
 
 func (h *ArticleHandler) Delete(c *gin.Context) {
-	id := cast.ToInt64(c.Param("id"))
-	if err := h.DB.Delete(&models.Article{}, id).Error; err != nil {
+	id := cast.ToUint(c.Param("id"))
+	err := h.Service.Delete(id)
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 		return
 	}

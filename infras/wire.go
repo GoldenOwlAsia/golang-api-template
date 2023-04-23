@@ -5,27 +5,26 @@
 package infras
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/api/v1"
-	"github.com/GoldenOwlAsia/golang-api-template/repository"
+	controllers2 "github.com/GoldenOwlAsia/golang-api-template/handlers"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
 
-func InitUserAPI(db *gorm.DB) v1.UserHandler {
+func InitUserAPI(db *gorm.DB) controllers2.UserHandler {
 	wire.Build(
-		repository.NewUserRepository,
 		services.NewUserService,
-		v1.NewUserHandler,
+		controllers2.NewUserHandler,
 	)
 
-	return v1.UserHandler{}
+	return controllers2.UserHandler{}
 }
 
-func InitArticleAPI(db *gorm.DB) v1.ArticleHandler {
+func InitArticleAPI(db *gorm.DB) controllers2.ArticleHandler {
 	wire.Build(
-		v1.NewArticleHandler,
+		services.NewArticleService,
+		controllers2.NewArticleHandler,
 	)
 
-	return v1.ArticleHandler{}
+	return controllers2.ArticleHandler{}
 }
