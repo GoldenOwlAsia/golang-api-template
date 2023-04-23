@@ -1,10 +1,8 @@
 package configs
 
 const (
-	UserRoleAdmin      = "admin"
-	UserStatusActive   = "active"
-	UserApprovedStatus = "approved"
+	UserRoleAdmin    = "admin"
+	UserStatusActive = "active"
 
 	DefaultDateCsvLayoutFormat = "02/01/2006"
-	ErrorRegistrationNumber    = "invalid registration number"
 )

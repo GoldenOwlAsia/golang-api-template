@@ -23,7 +23,7 @@ func HandleResponse(c *gin.Context) {
 	c.Next()
 	statusCode := c.Writer.Status()
 	if statusCode >= 400 {
-		//ok this is a request with error, let's make a record for it
+		// ok this is a request with error, let's make a record for it
 		// now print body (or log in your preferred way)
 		fmt.Println("Response body: " + blw.body.String())
 	}

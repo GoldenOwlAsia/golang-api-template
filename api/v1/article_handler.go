@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/api/forms"
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/gin-gonic/gin"
@@ -37,10 +37,10 @@ func (receiver ArticleHandler) Get(id int64) (*models.Article, error) {
 	return &article, err
 }
 
-var articleForm = new(forms.ArticleForm)
+var articleForm = new(requests.ArticleForm)
 
 func (receiver ArticleHandler) Create(c *gin.Context) {
-	var form forms.CreateArticleForm
+	var form requests.CreateArticleForm
 	currentUser := c.MustGet("currentUser").(models.User)
 	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
 		message := articleForm.Create(validationErr)
@@ -59,7 +59,7 @@ func (receiver ArticleHandler) Create(c *gin.Context) {
 
 func (receiver ArticleHandler) Update(c *gin.Context) {
 	id := cast.ToUint(c.Param("id"))
-	var form forms.CreateArticleForm
+	var form requests.CreateArticleForm
 	if validationErr := c.ShouldBindJSON(&form); validationErr != nil {
 		message := articleForm.Create(validationErr)
 		c.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{"message": message})

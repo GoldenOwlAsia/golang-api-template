@@ -1,4 +1,4 @@
-package forms
+package requests
 
 import (
 	"reflect"
