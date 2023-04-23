@@ -1,11 +1,9 @@
 package repository
 
 import (
-	"api/api/v1/requests"
-	"api/configs"
-	"api/models"
-	"time"
-
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
+	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/getsentry/sentry-go"
 	"gorm.io/gorm"
 )
@@ -21,20 +19,12 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (receiver UserRepository) Create(req requests.UserCreateRequest) (resp models.User, err error) {
-	defaultRole := configs.UserRoleAdmin
-	defaultStatus := configs.UserStatusActive
-	defaultApprovedStatus := configs.UserApprovedStatus
 	userGorm := models.User{
-		Username:       req.Username,
-		Password:       req.Password,
-		Email:          req.Email,
-		Role:           defaultRole,
-		Status:         defaultStatus,
-		ApprovedStatus: defaultApprovedStatus,
-		CreatedBy:      req.Username,
-		UpdatedBy:      req.Username,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
+		Username: req.Username,
+		Password: req.Password,
+		Email:    req.Email,
+		Role:     configs.UserRoleAdmin,
+		Status:   configs.UserStatusActive,
 	}
 	tx := receiver.DB.Create(&userGorm)
 
@@ -49,11 +39,6 @@ func (receiver UserRepository) Create(req requests.UserCreateRequest) (resp mode
 }
 
 func (receiver UserRepository) GetByUsername(username string) (resp models.User, err error) {
-	tx := receiver.DB.Where(&models.User{Username: username}).First(&resp)
-
-	err = tx.Error
-	if err != nil {
-		sentry.CaptureException(tx.Error)
-	}
+	err = receiver.DB.Where(&models.User{Username: username}).First(&resp).Error
 	return
 }

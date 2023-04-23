@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"api/configs"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"time"
 )
 

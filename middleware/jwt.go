@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"api/models"
-	"api/pkgs/jwt_auth_token"
-	"api/utils"
 	"fmt"
+	"github.com/GoldenOwlAsia/golang-api-template/models"
+	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
+	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -49,7 +49,7 @@ func (receiver jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 		userId, _ := strconv.Atoi(fmt.Sprint(sub))
 
 		var user models.User
-		err = receiver.db.Where(&models.User{Id: uint(userId)}).First(&user).Error
+		err = receiver.db.Where(&models.User{ID: uint(userId)}).First(&user).Error
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, utils.GetRespError("the user belonging to this token no logger exists", nil))
 			return

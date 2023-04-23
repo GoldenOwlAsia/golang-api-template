@@ -1,7 +1,7 @@
 package pkgs
 
 import (
-	"api/utils"
+	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"math"

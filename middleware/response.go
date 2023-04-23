@@ -1,9 +1,7 @@
 package middleware
 
 import (
-	"api/pkgs/sentry"
 	"bytes"
-	"errors"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +26,5 @@ func HandleResponse(c *gin.Context) {
 		//ok this is a request with error, let's make a record for it
 		// now print body (or log in your preferred way)
 		fmt.Println("Response body: " + blw.body.String())
-		go sentry.SendErrorToSentry(errors.New(blw.body.String()))
 	}
 }

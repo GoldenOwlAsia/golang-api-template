@@ -1,14 +1,15 @@
 package migrations
 
 import (
-	"api/api"
-	"api/models"
+	"github.com/GoldenOwlAsia/golang-api-template/models"
+	"gorm.io/gorm"
 	"log"
 )
 
-func Migrate() (err error) {
+func Migrate(DB *gorm.DB) (err error) {
 	log.Println("migrating data...")
-	return api.Api.DB.AutoMigrate(
+	return DB.AutoMigrate(
 		&models.User{},
+		&models.Article{},
 	)
 }

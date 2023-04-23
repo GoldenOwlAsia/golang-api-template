@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"api/api/v1/requests"
-	"api/configs"
-	"api/pkgs/jwt_auth_token"
-	"api/services"
-	"api/utils"
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
+	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
+	"github.com/GoldenOwlAsia/golang-api-template/services"
+	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"net/http"
 	"os"
 

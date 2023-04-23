@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"api/configs"
 	"errors"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"strings"
 )
 

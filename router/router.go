@@ -1,10 +1,9 @@
 package router
 
 import (
-	"api/api"
-	"api/docs"
-	"api/middleware"
-	"api/sse"
+	"github.com/GoldenOwlAsia/golang-api-template/docs"
+	"github.com/GoldenOwlAsia/golang-api-template/infras"
+	"github.com/GoldenOwlAsia/golang-api-template/middleware"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -12,25 +11,33 @@ import (
 	"net/http"
 )
 
-func InitRouter(app *gin.Engine, appHandler api.AppHandler, db *gorm.DB, stream *sse.Event) *gin.Engine {
+func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin.Engine {
 	middlewareFunc := middleware.NewJwtMiddleware(db)
 
 	app.GET("/health_check", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
-			"service_name": "goldenowl_gin_api",
+			"service_name": "Golden Owl Gin API",
 			"status":       "ok",
-			"data":         "📺 API Up and Running",
+			"data":         "📺 API up and running",
 		})
 	})
 
-	usersV1 := app.Group("api/v1")
+	usersV1 := app.Group("api/v1/user")
 	{
-		usersV1.POST("user", appHandler.User.Create)
-		usersV1.GET("user", middlewareFunc.DeserializeUser(), appHandler.User.GetByUsername)
-		usersV1.POST("user/login", appHandler.User.Login)
-		usersV1.POST("user/logout", middlewareFunc.DeserializeUser(), appHandler.User.Logout)
-		usersV1.POST("user/GenerateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
-		usersV1.POST("user/RefreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
+		usersV1.POST("/", appHandler.User.Create)
+		usersV1.GET("/", middlewareFunc.DeserializeUser(), appHandler.User.GetByUsername)
+		usersV1.POST("/login", appHandler.User.Login)
+		usersV1.POST("/logout", middlewareFunc.DeserializeUser(), appHandler.User.Logout)
+		usersV1.POST("/generateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
+		usersV1.POST("/refreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
+	}
+
+	articlesAPI := app.Group("api/v1/articles")
+	{
+		articlesAPI.GET("/", middlewareFunc.DeserializeUser(), appHandler.Article.All)
+		articlesAPI.POST("/", middlewareFunc.DeserializeUser(), appHandler.Article.Create)
+		articlesAPI.PUT("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Update)
+		articlesAPI.DELETE("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Delete)
 	}
 
 	docs.SwaggerInfo.BasePath = ""

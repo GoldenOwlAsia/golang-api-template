@@ -7,9 +7,9 @@
 package infras
 
 import (
-	"api/api/v1"
-	"api/repository"
-	"api/services"
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1"
+	"github.com/GoldenOwlAsia/golang-api-template/repository"
+	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"gorm.io/gorm"
 )
 
@@ -20,4 +20,9 @@ func InitUserAPI(db *gorm.DB) v1.UserHandler {
 	userService := services.NewUserService(userRepository)
 	userHandler := v1.NewUserHandler(userService)
 	return userHandler
+}
+
+func InitArticleAPI(db *gorm.DB) v1.ArticleHandler {
+	articleHandler := v1.NewArticleHandler(db)
+	return articleHandler
 }

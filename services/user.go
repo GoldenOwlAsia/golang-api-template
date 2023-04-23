@@ -1,17 +1,16 @@
 package services
 
 import (
-	"api/api/v1/requests"
-	"api/api/v1/responses"
-	"api/models"
-	"api/pkgs/jwt_auth_token"
-	"api/repository"
-	"api/utils"
 	"errors"
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1/requests"
+	"github.com/GoldenOwlAsia/golang-api-template/api/v1/responses"
+	"github.com/GoldenOwlAsia/golang-api-template/models"
+	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
+	"github.com/GoldenOwlAsia/golang-api-template/repository"
+	"github.com/GoldenOwlAsia/golang-api-template/utils"
+	"github.com/spf13/cast"
 	"gorm.io/gorm"
 	"os"
-	"strconv"
-
 	"strings"
 )
 
@@ -76,7 +75,7 @@ func (receiver UserService) Login(req requests.UserLoginRequest) (resp responses
 		err = errors.New("invalid username or password")
 		return
 	}
-	var userIdString = strconv.FormatUint(uint64(userRes.Id), 10)
+	var userIdString = cast.ToString(userRes.ID)
 	if err = utils.VerifyPassword(userRes.Password, req.Password); err != nil {
 		err = errors.New("invalid username or password")
 		return

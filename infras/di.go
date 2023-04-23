@@ -1,13 +1,18 @@
 package infras
 
 import (
-	"api/api"
-	"api/sse"
+	v1 "github.com/GoldenOwlAsia/golang-api-template/api/v1"
 	"gorm.io/gorm"
 )
 
-func DI(db *gorm.DB, event *sse.Event) api.AppHandler {
-	return api.AppHandler{
-		User: InitUserAPI(db),
+type AppHandler struct {
+	User    v1.UserHandler
+	Article v1.ArticleHandler
+}
+
+func DI(db *gorm.DB) AppHandler {
+	return AppHandler{
+		User:    InitUserAPI(db),
+		Article: InitArticleAPI(db),
 	}
 }
