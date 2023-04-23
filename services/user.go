@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/responses"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
@@ -9,7 +10,6 @@ import (
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/spf13/cast"
 	"gorm.io/gorm"
-	"os"
 )
 
 type UserService struct {
@@ -35,8 +35,8 @@ func (s UserService) Login(req requests.UserLoginRequest) (resp responses.UserLo
 		err = errors.New("invalid username or password")
 		return
 	}
-	accessToken, _ := jwt_auth_token.GenerateAccessToken(userIdString, os.Getenv("SECRET_KEY"))
-	refreshToken, _ := jwt_auth_token.GenerateRefreshToken(userIdString, os.Getenv("SECRET_KEY"))
+	accessToken, _ := jwt_auth_token.GenerateAccessToken(userIdString, configs.ConfApp.SecretKey)
+	refreshToken, _ := jwt_auth_token.GenerateRefreshToken(userIdString, configs.ConfApp.SecretKey)
 	resp = responses.UserLoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,

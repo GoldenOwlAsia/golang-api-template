@@ -2,13 +2,13 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
 	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -40,7 +40,7 @@ func (m jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 			return
 		}
 
-		sub, err := jwt_auth_token.ValidateAccessToken(token, os.Getenv("SECRET_KEY"))
+		sub, err := jwt_auth_token.ValidateAccessToken(token, configs.ConfApp.SecretKey)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, utils.GetRespError("your token is invalid", nil))
 			return

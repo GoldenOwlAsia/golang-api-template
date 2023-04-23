@@ -11,6 +11,7 @@ var (
 
 type Config struct {
 	AppMode          string        `mapstructure:"APP_MODE"`
+	SecretKey        string        `mapstructure:"SECRET_KEY"`
 	AppTimezone      string        `mapstructure:"APP_TIMEZONE"`
 	Port             string        `mapstructure:"PORT"`
 	HttpSchema       string        `mapstructure:"HTTP_SCHEMA"`
@@ -26,10 +27,6 @@ type Config struct {
 	TokenSecret      string        `mapstructure:"TOKEN_SECRET"`
 	TokenExpiresIn   time.Duration `mapstructure:"TOKEN_EXPIRED_IN"`
 	TokenMaxAge      int           `mapstructure:"TOKEN_MAX_AGE"`
-	RedisEndpoint    string        `mapstructure:"REDIS_ENDPOINT"`
-	RedisPassword    string        `mapstructure:"REDIS_PASSWORD"`
-	MapsApiUrl       string        `mapstructure:"MAPS_API_URL"`
-	MapsApiKey       string        `mapstructure:"MAPS_API_KEY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {

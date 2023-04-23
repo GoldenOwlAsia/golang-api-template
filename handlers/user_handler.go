@@ -1,14 +1,13 @@
 package handlers
 
 import (
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
 	"github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt_auth_token"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
-	"net/http"
-	"os"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type UserHandler struct {
@@ -60,7 +59,7 @@ func (h UserHandler) GenerateTokenHandler(c *gin.Context) {
 	}
 
 	// generate token
-	token, err := jwt_auth_token.GenerateAccessToken(userId.(string), os.Getenv("SECRET_KEY"))
+	token, err := jwt_auth_token.GenerateAccessToken(userId.(string), configs.ConfApp.SecretKey)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
 		return

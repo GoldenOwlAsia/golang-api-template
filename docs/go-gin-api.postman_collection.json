@@ -10,14 +10,7 @@
 			"name": "Login",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODEyNjE2OTMsImlhdCI6MTY4MDU0MTY5MywibmJmIjoxNjgwNTQxNjkzLCJzdWIiOiJhZG1pbiJ9.IuSe4TkxQHX9CMG8PnX0cw7qwQdCB_oNqTeSRblU-NI",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [],
@@ -113,7 +106,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/v1/articles/2",
+					"raw": "localhost:8080/api/v1/articles/10",
 					"host": [
 						"localhost"
 					],
@@ -122,7 +115,7 @@
 						"api",
 						"v1",
 						"articles",
-						"2"
+						"10"
 					]
 				}
 			},
@@ -153,7 +146,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/v1/articles/1",
+					"raw": "localhost:8080/api/v1/articles/4",
 					"host": [
 						"localhost"
 					],
@@ -162,7 +155,7 @@
 						"api",
 						"v1",
 						"articles",
-						"1"
+						"4"
 					]
 				}
 			},
@@ -232,7 +225,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/v1/articles/2",
+					"raw": "localhost:8080/api/v1/articles/4",
 					"host": [
 						"localhost"
 					],
@@ -241,7 +234,7 @@
 						"api",
 						"v1",
 						"articles",
-						"2"
+						"4"
 					]
 				}
 			},

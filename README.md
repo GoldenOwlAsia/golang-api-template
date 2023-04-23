@@ -115,7 +115,29 @@ make lint
 golangci-lint run -v
 ```
 
-### demo
+### Demo
+#### Login
+```sh
+curl -L 'localhost:8080/api/v1/user/login' \
+-H 'Content-Type: application/json' \
+-d '{
+  "username": "admin",
+  "password": "1234"
+}'
+```
+response:
+```json
+{
+    "status": "success",
+    "message": "welcome back",
+    "data": {
+        "id": "",
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIyNDkzMDAsInVzZXJfaWQiOiIxIn0.6A1njyesyO78yAcyvP3Qnp5PKLI-kAMqa7qTswBOrR0",
+        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODIzMzQ4MDAsInVzZXJfaWQiOiIxIn0.f31ckZtq5yPTgn0GCboR9CUclqWpChts8Bj4Cnx2AMk"
+    }
+}
+```
+#### Articles
 ```shell
 curl -L 'localhost:8080/api/v1/articles' \
 -H 'Authorization: Bearer xxx.xxx.xxx-xxx' \

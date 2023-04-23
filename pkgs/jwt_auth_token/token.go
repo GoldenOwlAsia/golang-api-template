@@ -2,8 +2,8 @@ package jwt_auth_token
 
 import (
 	"fmt"
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/golang-jwt/jwt/v5"
-	"os"
 	"time"
 )
 
@@ -62,7 +62,7 @@ func RefreshAccessToken(refreshTokenString string) (string, error) {
 		}
 
 		// return secret key
-		return []byte(os.Getenv("SECRET_KEY")), nil
+		return []byte(configs.ConfApp.SecretKey), nil
 	})
 
 	// check for errors
@@ -77,7 +77,7 @@ func RefreshAccessToken(refreshTokenString string) (string, error) {
 	}
 
 	// generate new access token
-	accessToken, err := GenerateAccessToken(userId, os.Getenv("SECRET_KEY"))
+	accessToken, err := GenerateAccessToken(userId, configs.ConfApp.SecretKey)
 	if err != nil {
 		return "", err
 	}
@@ -114,13 +114,13 @@ func ValidateAccessToken(tokenString string, key string) (*jwt.Token, error) {
 
 func GenerateToken(userId string) (*Token, error) {
 	// generate access token
-	accessToken, err := GenerateAccessToken(userId, os.Getenv("SECRET_KEY"))
+	accessToken, err := GenerateAccessToken(userId, configs.ConfApp.SecretKey)
 	if err != nil {
 		return nil, err
 	}
 
 	// generate refresh token
-	refreshToken, err := GenerateRefreshToken(userId, os.Getenv("SECRET_KEY"))
+	refreshToken, err := GenerateRefreshToken(userId, configs.ConfApp.SecretKey)
 	if err != nil {
 		return nil, err
 	}
