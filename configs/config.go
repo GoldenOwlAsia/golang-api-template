@@ -30,9 +30,9 @@ type Config struct {
 	TokenMaxAge      int           `mapstructure:"TOKEN_MAX_AGE"`
 }
 
-func LoadConfig(path string) (config Config, err error) {
+func LoadConfig(path, nvFile string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigFile(".env")
+	viper.SetConfigFile(nvFile)
 	viper.AutomaticEnv()
 	err = viper.ReadInConfig()
 

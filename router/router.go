@@ -24,15 +24,14 @@ func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin
 
 	users := app.Group("api/v1/user")
 	users.POST("/login", appHandler.User.Login)
-	users.POST("/generateToken", middlewareFunc.DeserializeUser(), appHandler.User.GenerateTokenHandler)
-	users.POST("/refreshAccessToken", middlewareFunc.DeserializeUser(), appHandler.User.RefreshAccessTokenHandler)
+	users.POST("/refreshAccessToken", appHandler.User.RefreshAccessTokenHandler)
 
-	articles := app.Group("api/v1/articles")
-	articles.GET("/", middlewareFunc.DeserializeUser(), appHandler.Article.All)
-	articles.GET("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Get)
-	articles.POST("/", middlewareFunc.DeserializeUser(), appHandler.Article.Create)
-	articles.PUT("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Update)
-	articles.DELETE("/:id", middlewareFunc.DeserializeUser(), appHandler.Article.Delete)
+	articles := app.Group("api/v1/articles", middlewareFunc.DeserializeUser())
+	articles.GET("/", appHandler.Article.All)
+	articles.GET("/:id", appHandler.Article.Get)
+	articles.POST("/", appHandler.Article.Create)
+	articles.PUT("/:id", appHandler.Article.Update)
+	articles.DELETE("/:id", appHandler.Article.Delete)
 
 	docs.SwaggerInfo.BasePath = ""
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

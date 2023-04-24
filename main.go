@@ -53,7 +53,7 @@ func main() {
 
 func InitEnv() {
 	var err error
-	_, err = configs.LoadConfig(".")
+	_, err = configs.LoadConfig(".", ".env")
 	if err != nil {
 		log.Fatal("cannot load configs: ", err)
 	}

@@ -53,7 +53,7 @@ func GenerateRefreshToken(userId, key string) (string, error) {
 	return signedToken, nil
 }
 
-func RefreshAccessToken(refreshTokenString string) (string, error) {
+func RefreshAccessToken(refreshTokenString string) (accessToken string, newRefreshToken string, err error) {
 	// parse refresh token
 	refreshToken, err := jwt.Parse(refreshTokenString, func(token *jwt.Token) (interface{}, error) {
 		// check signing method
@@ -67,23 +67,26 @@ func RefreshAccessToken(refreshTokenString string) (string, error) {
 
 	// check for errors
 	if err != nil {
-		return "", err
+		return
 	}
 
 	// get user ID from token
 	userID, ok := refreshToken.Claims.(jwt.MapClaims)["user_id"].(string)
 	if !ok {
-		return "", fmt.Errorf("invalid token")
+		err = fmt.Errorf("invalid token")
+		return
 	}
 
 	// generate new access token
-	accessToken, err := GenerateAccessToken(userID, configs.ConfApp.SecretKey)
+	accessToken, err = GenerateAccessToken(userID, configs.ConfApp.SecretKey)
 	if err != nil {
-		return "", err
+		return
 	}
 
+	newRefreshToken, _ = GenerateRefreshToken(userID, configs.ConfApp.SecretKey)
+
 	// return access token
-	return accessToken, nil
+	return
 }
 
 func ValidateAccessToken(tokenString string, key string) (*jwt.Token, error) {

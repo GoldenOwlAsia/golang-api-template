@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/configs"
+	"net/http"
+
 	"github.com/GoldenOwlAsia/golang-api-template/handlers/requests"
 	jwt_token "github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt-token"
 	"github.com/GoldenOwlAsia/golang-api-template/services"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type UserHandler struct {
@@ -47,40 +47,19 @@ func (h *UserHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GetRespSuccess("welcome back", resLogin))
 }
 
-func (h UserHandler) GenerateTokenHandler(c *gin.Context) {
-	// get user ID from context
-	userID, ok := c.Get("user_id")
-	if !ok {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "user ID not found"})
-		return
-	}
-
-	// generate token
-	token, err := jwt_token.GenerateAccessToken(userID.(string), configs.ConfApp.SecretKey)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate token"})
-		return
-	}
-
-	// return token
-	c.JSON(http.StatusOK, token)
-}
-
 func (h *UserHandler) RefreshAccessTokenHandler(c *gin.Context) {
-	// get refresh token from request
 	refreshTokenString, ok := c.GetPostForm("refresh_token")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "refresh token not found"})
 		return
 	}
-
-	// refresh access token
-	accessToken, err := jwt_token.RefreshAccessToken(refreshTokenString)
+	newAccessToken, newRefreshToken, err := jwt_token.RefreshAccessToken(refreshTokenString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// return access token
-	c.JSON(http.StatusOK, gin.H{"access_token": accessToken})
+	c.JSON(http.StatusOK, jwt_token.Token{
+		AccessToken:  newAccessToken,
+		RefreshToken: newRefreshToken,
+	})
 }
