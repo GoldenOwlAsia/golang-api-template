@@ -1,6 +1,13 @@
-## Golden Owl Golang Gin API
+# Golden Owl Golang Gin API
 
-## Getting Started
+<p align="center">
+<img src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png" width="180" alt="accessibility text">
+</p>
+
+### Why Using Gin For Golang Backend?
+
+Gin allows you to build web applications and microservices in Go. It contains a set of commonly used functionalities (e.g., routing, middleware support, rendering, etc.) that reduce boilerplate code and make it simpler to build web applications.
+
 
 ### Prerequisites
 
@@ -19,11 +26,11 @@
    go mod download && go mod tidy
    ```
 2. Create `.env` file from `.env.example` file.
-3. ▶ run this command to start (hot reload):
+3. run this command to start (hot reload):
    ```sh
    make watch
    ```
-   ▶ run without hot reload
+   run without hot reload
    ```sh
    make run
    ```
@@ -35,15 +42,10 @@
    docker-compose up
    ```
 
-### ▶️  Build go executables
+### Build go executables
 build api executable file
 ```sh
 make build
-```
-
-run it
-```sh
-api
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->
