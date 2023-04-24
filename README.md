@@ -36,11 +36,10 @@ Gin allows you to build web applications and microservices in Go. It contains a 
    ```
 4. Visit: http://localhost:8080/swagger/index.html to access the API interface.
 #### Via `docker`
-
-1. Run by docker
-   ```sh
-   docker-compose up
-   ```
+Run by docker
+```sh
+docker-compose up
+```
 
 ### Build go executables
 build api executable file
