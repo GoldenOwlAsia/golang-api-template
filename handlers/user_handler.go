@@ -47,7 +47,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GetRespSuccess("welcome back", resLogin))
 }
 
-func (h *UserHandler) RefreshAccessTokenHandler(c *gin.Context) {
+func (h *UserHandler) RefreshAccessToken(c *gin.Context) {
 	refreshTokenString, ok := c.GetPostForm("refresh_token")
 	if !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "refresh token not found"})

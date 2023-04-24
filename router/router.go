@@ -12,7 +12,7 @@ import (
 )
 
 func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin.Engine {
-	middlewareFunc := middleware.NewJwtMiddleware(db)
+	jwtAuthMiddleware := middleware.NewJwtAuth(db)
 
 	app.GET("/health_check", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
@@ -24,9 +24,9 @@ func InitRouter(app *gin.Engine, appHandler infras.AppHandler, db *gorm.DB) *gin
 
 	users := app.Group("api/v1/user")
 	users.POST("/login", appHandler.User.Login)
-	users.POST("/refreshAccessToken", appHandler.User.RefreshAccessTokenHandler)
+	users.POST("/refreshAccessToken", appHandler.User.RefreshAccessToken)
 
-	articles := app.Group("api/v1/articles", middlewareFunc.DeserializeUser())
+	articles := app.Group("api/v1/articles", jwtAuthMiddleware.Authenticate())
 	articles.GET("/", appHandler.Article.All)
 	articles.GET("/:id", appHandler.Article.Get)
 	articles.POST("/", appHandler.Article.Create)

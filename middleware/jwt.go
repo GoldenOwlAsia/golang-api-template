@@ -1,13 +1,14 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/GoldenOwlAsia/golang-api-template/configs"
 	"github.com/GoldenOwlAsia/golang-api-template/models"
-	jwt_token "github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt-token"
+	jwtToken "github.com/GoldenOwlAsia/golang-api-template/pkgs/jwt-token"
 	"github.com/GoldenOwlAsia/golang-api-template/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
@@ -18,22 +19,18 @@ type jwtMiddleware struct {
 	db *gorm.DB
 }
 
-func NewJwtMiddleware(db *gorm.DB) *jwtMiddleware {
+func NewJwtAuth(db *gorm.DB) *jwtMiddleware {
 	return &jwtMiddleware{db: db}
 }
 
-func (m jwtMiddleware) DeserializeUser() gin.HandlerFunc {
+func (m jwtMiddleware) Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var token string
-		cookie, err := c.Cookie("token")
 
-		authorizationHeader := c.Request.Header.Get("Authorization")
-		fields := strings.Fields(authorizationHeader)
-
-		if len(fields) != 0 && fields[0] == "Bearer" {
-			token = fields[1]
-		} else if err == nil {
-			token = cookie
+		token, err := extractBearerToken(c.GetHeader("Authorization"))
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusForbidden, utils.GetRespError(err.Error(), nil))
+			return
 		}
 
 		if token == "" {
@@ -41,7 +38,7 @@ func (m jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 			return
 		}
 
-		sub, err := jwt_token.ValidateAccessToken(token, configs.ConfApp.SecretKey)
+		sub, err := jwtToken.ValidateAccessToken(token, configs.ConfApp.SecretKey)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, utils.GetRespError("your token is invalid", nil))
 			return
@@ -59,4 +56,17 @@ func (m jwtMiddleware) DeserializeUser() gin.HandlerFunc {
 		c.Set("currentUser", user)
 		c.Next()
 	}
+}
+
+func extractBearerToken(header string) (string, error) {
+	if header == "" {
+		return "", errors.New("bad header value given")
+	}
+
+	token := strings.Split(header, " ")
+	if len(token) != 2 {
+		return "", errors.New("incorrectly formatted authorization header")
+	}
+
+	return token[1], nil
 }
