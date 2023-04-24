@@ -1,4 +1,4 @@
-# Golden Owl Golang Gin API
+# Golden Owl Golang Gin API Template
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png" width="180" alt="accessibility text">
