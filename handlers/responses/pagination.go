@@ -1,12 +1,13 @@
 package responses
 
 import (
-	"github.com/GoldenOwlAsia/golang-api-template/configs"
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"math"
 	"reflect"
-	"strconv"
+
+	"github.com/GoldenOwlAsia/golang-api-template/configs"
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/cast"
 )
 
 type PaginatedResponse struct {
@@ -32,9 +33,9 @@ func Pagination(c *gin.Context) PaginatedData {
 		queryValue := value[len(value)-1]
 		switch key {
 		case "limit":
-			limit, _ = strconv.Atoi(queryValue)
+			limit = cast.ToInt(queryValue)
 		case "page":
-			page, _ = strconv.Atoi(queryValue)
+			page = cast.ToInt(queryValue)
 		case "sort":
 			sort = queryValue
 		}
